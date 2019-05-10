@@ -1,6 +1,7 @@
+from os import environ
 from pymongo import MongoClient
 from datetime import datetime, timedelta
-from os import environ
+from routers.seatgeek import getSeatGeekData
 import modules.event as EVENT
 import modules.geolocation as GEO
 
@@ -29,11 +30,35 @@ SUCCESS = {
 }
 
 MILE_TO_KM_RATE = 1.60934
+DATABASE_FILL_COUNT = 1000
+SEAT_GEEK_IS_ACTIVATED = True
 
 mongoLink = environ.get(KEY_ENV_MONGO)
 client = MongoClient() if mongoLink == None else MongoClient(mongoLink)
 database = client.get_database()
 collection = database[COLLECTION_NAME]
+
+def fillDatabase(city):
+  yesterday = datetime.utcnow() - timedelta(days=1)
+  results = []
+
+  if SEAT_GEEK_IS_ACTIVATED:
+    results += getSeatGeekData(city, DATABASE_FILL_COUNT)
+  
+  for event in results:
+    event = event.dictionary
+    times = event[EVENT.Key_Times]
+    startTimeStr = times[EVENT.Key_StartTimeStr]
+    parser = times[EVENT.Key_Date_Parsing]
+
+    if startTimeStr == None or parser == None:
+      continue
+
+    startDateObj = datetime.strptime(startTimeStr, parser)
+    if (yesterday - startDateObj).days > 0:
+      continue
+    
+    safe_insert(event)
 
 def safe_insert(event):
   if EVENT.Key_ID not in event:
@@ -209,6 +234,11 @@ def getDateQueryString(year, month, day):
   
   return "%s-%s-%s*" % (year, month, day)
 
+def getEventFromID(eventID):
+  eventIdString = str(eventID)
+  result = contains(eventIdString)
+  return result
+
 def eventsFromDay(year, month, day):
   dateStr = getDateQueryString(year, month, day)
 
@@ -253,11 +283,11 @@ def eventsFromRange(centerLat, centerLon, mileRadius):
   lessThan = '$lte'
 
   if mileRadius < 0:
-    return ERROR_INVALID_OBJECT
+    return None
   
   geodosic = GEO.Geolocation(centerLat, centerLon)
   if not geodosic.isValidGeodesic:
-    return ERROR_INVALID_OBJECT
+    return None
 
   bounding = geodosic.boundingCoordinates(mileRadius * MILE_TO_KM_RATE)
   minBounds = bounding[GEO.KEY_MINIMUM]
@@ -272,7 +302,6 @@ def eventsFromRange(centerLat, centerLon, mileRadius):
     ]
   }
 
-  print(queryDict)
   results = collection.find(queryDict)
   if results == None:
     return None
