@@ -12,6 +12,8 @@ CITY_KEY = 'city'
 CLIENT_ID_KEY = 'clientid'
 USER_PASSWORD = 'password'
 EVENT_ID_KEY = 'eventid'
+USERID_KEY = 'uuid'
+USERTAGS_KEY = 'tags'
 
 SUCCESS_STATUS = 200
 INVALID_SEARCH_STATUS = 404
@@ -30,6 +32,23 @@ def searchResults(result):
   if result == None:
     return getJsonResponse(INVALID_SEARCH_STATUS, INVALID_SEARCH_MESSAGE)
   return getJsonResponse(SUCCESS_STATUS, result)
+
+def validateAttendant(eventid, userid, tags):
+  if (
+    eventid == None or
+    userid == None or
+    tags == None or
+    not isinstance(tags, list)
+  ):
+    return False
+  
+  return True
+
+def getAttendantObject(userid, tags):
+  return {
+    USERID_KEY: str(userid),
+    USERTAGS_KEY: tags
+  }
 
 # GET REQUESTS
 @app.route('/', methods=['GET'])
@@ -76,7 +95,7 @@ def updateDatabase():
   if Auth.validateClient(clientID) == False:
     return getJsonResponse(INVALID_PASSWORD, INVALID_ClIENT_MESSAGE)
   elif city == None:
-    return getJsonResponse(INVALID_QUERY, 'Invalid city query')
+    return getJsonResponse(INVALID_QUERY, 'Invalid City Query')
 
   Database.fillDatabase(str(city))
   return getJsonResponse(SUCCESS_STATUS, 'Updated')
@@ -89,7 +108,7 @@ def deleteOne():
   if Auth.validateClient(clientID) == False:
     return getJsonResponse(INVALID_PASSWORD, INVALID_ClIENT_MESSAGE)
   elif eventId == None:
-    return getJsonResponse(INVALID_QUERY, 'Invalid event id')
+    return getJsonResponse(INVALID_QUERY, 'Invalid Event ID')
   
   results = Database.safe_delete(str(eventId))
   return getJsonResponse(results[STATUS_KEY], results[RESULT_KEY])
@@ -103,6 +122,32 @@ def cleanDatabase():
 
   result = Database.safe_clean()
   return getJsonResponse(SUCCESS_STATUS, ("%d Deleted" % result))
+
+@app.route('/addAttendant')
+def addAttendant():
+  clientID = request.args.get(CLIENT_ID_KEY)
+  eventId = request.args.get(EVENT_ID_KEY)
+  userID = request.args.get(USERID_KEY)
+  tags = request.args.getlist(USERTAGS_KEY + '[]')
+
+  if validateAttendant(eventId, userID, tags) == False:
+    return getJsonResponse(INVALID_QUERY, 'Invalid Query')
+
+  results = Database.safe_addAttendant(str(eventId), getAttendantObject(userID, tags))
+  return getJsonResponse(results[STATUS_KEY], results[RESULT_KEY])
+
+@app.route('/removeAttendant')
+def removeAttendant():
+  clientID = request.args.get(CLIENT_ID_KEY)
+  eventId = request.args.get(EVENT_ID_KEY)
+  userID = request.args.get(USERID_KEY)
+  tags = request.args.getlist(USERTAGS_KEY + '[]')
+
+  if validateAttendant(eventId, userID, tags) == False:
+    return getJsonResponse(INVALID_QUERY, 'Invalid Query')
+
+  results = Database.safe_removeAttendant(str(eventId), getAttendantObject(userID, tags))
+  return getJsonResponse(results[STATUS_KEY], results[RESULT_KEY])
 
 # INIT
 if __name__ == '__main__':

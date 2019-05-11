@@ -112,12 +112,13 @@ def safe_delete(uid):
   return SUCCESS
 
 def safe_clean():
+  lessThan = '$lte'
   yesterday = datetime.utcnow() - timedelta(days=2)
   dateString = datetime.strftime(yesterday, EVENT.DEFAULT_PARSING_STRING)
   
   result = collection.delete_many({
     EVENT.Key_Times + "." + EVENT.Key_StartTimeStr:{
-      '$lte':dateString
+      lessThan:dateString
     }
   })
 
