@@ -12,6 +12,7 @@ CITY_KEY = 'city'
 CLIENT_ID_KEY = 'clientid'
 USER_PASSWORD = 'password'
 EVENT_ID_KEY = 'eventid'
+SWITCH_KEY = 'switch'
 USERID_KEY = 'uuid'
 USERTAGS_KEY = 'tags'
 
@@ -87,6 +88,23 @@ def createNewClientID():
     return getJsonResponse(INVALID_PASSWORD, INVALID_PASSWORD_MESSAGE)
   return getJsonResponse(SUCCESS_STATUS, result)
 
+@app.route('/toggleDatabase')
+def toggleRoute():
+  clientID = request.args.get(CLIENT_ID_KEY)
+  datasourceId = request.args.get(SWITCH_KEY)
+
+  if Auth.validateClient(clientID) == False:
+    return getJsonResponse(INVALID_PASSWORD, INVALID_ClIENT_MESSAGE)
+  elif datasourceId == None or not isinstance(datasourceId, str):
+    return getJsonResponse(INVALID_QUERY, 'Invalid Query Type') 
+  elif datasourceId not in Database.DATABASE_SWITCHES:
+    return getJsonResponse(INVALID_QUERY, 'Invalid DB Name')
+  
+  previous = Database.DATABASE_SWITCHES[datasourceId]
+  Database.DATABASE_SWITCHES[datasourceId] = not previous
+  result = str(Database.DATABASE_SWITCHES[datasourceId])
+  return getJsonResponse(SUCCESS_STATUS, result)
+
 @app.route('/update')
 def updateDatabase():
   clientID = request.args.get(CLIENT_ID_KEY)
@@ -123,6 +141,7 @@ def cleanDatabase():
   result = Database.safe_clean()
   return getJsonResponse(SUCCESS_STATUS, ("%d Deleted" % result))
 
+# Passing arrays = tags[]=car&tags[]=radio
 @app.route('/addAttendant')
 def addAttendant():
   clientID = request.args.get(CLIENT_ID_KEY)

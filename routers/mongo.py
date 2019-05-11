@@ -31,7 +31,10 @@ SUCCESS = {
 
 MILE_TO_KM_RATE = 1.60934
 DATABASE_FILL_COUNT = 1000
-SEAT_GEEK_IS_ACTIVATED = True
+SEAT_GEEK_SWITCH_KEY = 'seatGeekSwitch'
+DATABASE_SWITCHES = {
+  SEAT_GEEK_SWITCH_KEY: True
+}
 
 mongoLink = environ.get(KEY_ENV_MONGO)
 client = MongoClient() if mongoLink == None else MongoClient(mongoLink)
@@ -42,7 +45,8 @@ def fillDatabase(city):
   yesterday = datetime.utcnow() - timedelta(days=1)
   results = []
 
-  if SEAT_GEEK_IS_ACTIVATED:
+  # switches for databases
+  if DATABASE_SWITCHES[SEAT_GEEK_SWITCH_KEY]:
     results += getSeatGeekData(city, DATABASE_FILL_COUNT)
   
   for event in results:
