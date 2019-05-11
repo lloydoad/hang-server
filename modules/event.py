@@ -22,7 +22,7 @@ Key_Image = "imageUrl"
 Key_AttendanceCount = "attendanceTotal"
 Key_AttendanceList = "attendanceList"
 
-DEFAULT_PARSING_STRING = '%a, %d %b %Y %H:%M:%S %z'
+DEFAULT_PARSING_STRING = '%Y-%m-%dT%H:%M:%S'
 
 class Event:
   def __init__(self, name, desc, attendants=[], preset=None):
