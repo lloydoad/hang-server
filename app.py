@@ -94,5 +94,16 @@ def deleteOne():
   results = Database.safe_delete(str(eventId))
   return getJsonResponse(results[STATUS_KEY], results[RESULT_KEY])
 
+@app.route('/clean')
+def cleanDatabase():
+  clientID = request.args.get(CLIENT_ID_KEY)
+
+  if Auth.validateClient(clientID) == False:
+    return getJsonResponse(INVALID_PASSWORD, INVALID_ClIENT_MESSAGE)
+
+  result = Database.safe_clean()
+  return getJsonResponse(SUCCESS_STATUS, ("%d Deleted" % result))
+
+# INIT
 if __name__ == '__main__':
   app.run()

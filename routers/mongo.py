@@ -111,6 +111,18 @@ def safe_delete(uid):
 
   return SUCCESS
 
+def safe_clean():
+  yesterday = datetime.utcnow() - timedelta(days=2)
+  dateString = datetime.strftime(yesterday, EVENT.DEFAULT_PARSING_STRING)
+  
+  result = collection.delete_many({
+    EVENT.Key_Times + "." + EVENT.Key_StartTimeStr:{
+      '$lte':dateString
+    }
+  })
+
+  return result.deleted_count
+
 def safe_addAttendant(eventId, attendantObj):
   if (
     USERID_KEY not in attendantObj or
