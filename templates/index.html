@@ -5,24 +5,71 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Hang - Server</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'skeleton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'index.css') }}">
 </head>
 <body>
-    <!-- <main>
-        <img src="{{ url_for('static', filename = 'images/icon.png') }}" alt="icon">
-        <h1>Hang - Server</h1>
-    </main> -->
-    <h1>Hang</h1>
-    <style>
-        body {
-            background-color:#344E6C;
-            margin: 0px; 
-            color: white;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+    <main>
+        <div class="center">
+            <div class="title">
+                <img src="{{ url_for('static', filename = 'images/logo.png') }}" alt="hang-logo">
+                <h1>Hang</h1>
+            </div>
+            <div class="buttons">
+                <div class="button">
+                    <h3 class="button-title">Add Event</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Add Attendant</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Remove Attendant</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Delete Event</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Update Database</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Clean Database</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Toggle Source</h3>
+                </div>
+                <div class="button">
+                    <h3 class="button-title">Add Client</h3>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="attendant-panel">
+        <button class="button-primary close-button" style="background-color: #FF7F50">Close</button>
+        <form action="">
+            <div class="row">
+                <label for="eventid">Event ID</label>
+                <input class="u-full-width" type="eventId" placeholder="0000000" id="eventid">
+                <label for="tags">Tags</label>
+                <input class="u-full-width" type="tags" placeholder="concert" id="tags">
+            </div>
+            <label>Added Tags</label>
+            <div class="added-tags-container">
+                <div class="added-tag">
+                    <p class="added-tag-text">Tag</p>
+                    <img class="added-tag-close" src="{{ url_for('static', filename = 'images/close.jpg') }}" alt="remove">
+                </div>
+                <div class="added-tag">
+                    <p class="added-tag-text">Longerest Tag Yeah</p>
+                    <img class="added-tag-close" src="{{ url_for('static', filename = 'images/close.jpg') }}" alt="remove">
+                </div>
+            </div>
+            <div class="custom-column">
+                <input class="button-primary" type="button" value="Add Tag">
+                <input class="button-primary" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
 </body>
 </html>
