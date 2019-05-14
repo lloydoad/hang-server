@@ -1,2 +1,2 @@
-# hang-server
-Control server and database manager for hang react app
+# HANG SERVER
+A control center, database manager, and API manager for hang react app
