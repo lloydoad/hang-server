@@ -2,7 +2,7 @@ from routers.service import makeRequest
 from os import environ
 import modules.event as EVENT
 
-SEATGEEK_API_RESULT_PER_PAGE = 30
+SEATGEEK_API_RESULT_PER_PAGE = 100
 SEATGEEK_API_URL = 'https://api.seatgeek.com/2/events?'
 KEY_ENV_SEATGEEK = "SEAT_GEEK_CLIENT_ID"
 CLIENT_ID = environ.get(KEY_ENV_SEATGEEK)
@@ -48,11 +48,12 @@ def getSeatGeekData(city, targetCount):
 
     response = response.json()
     totalAvailable = response[KEY_META][KEY_TOTAL]
-
+    
     eventGroup = response[KEY_EVENTS]
     for event in eventGroup:
       eventInstance = createEventInstance(event)
 
+      print(eventInstance)
       if KEY_SCORE in event:
         attendanceCnt = event[KEY_SCORE]
         cnt = int(attendanceCnt * totalAvailable * 2)
@@ -61,6 +62,7 @@ def getSeatGeekData(city, targetCount):
 
       result.append(eventInstance)
 
+    print('Fetched ', len(result))
     page += 1
     loadedCount = SEATGEEK_API_RESULT_PER_PAGE * page
     if loadedCount > totalAvailable:
