@@ -5,24 +5,94 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Hang - Server</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'skeleton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'index.css') }}">
 </head>
 <body>
-    <!-- <main>
-        <img src="{{ url_for('static', filename = 'images/icon.png') }}" alt="icon">
-        <h1>Hang - Server</h1>
-    </main> -->
-    <h1>Hang</h1>
-    <style>
-        body {
-            background-color:#344E6C;
-            margin: 0px; 
-            color: white;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+    <main>
+        <div class="center">
+            <div class="title">
+                <img src="{{ url_for('static', filename = 'images/logo.png') }}" alt="hang-logo">
+                <h1>Hang</h1>
+            </div>
+            <div class="buttons">
+                <div class="button">
+                    <h3 class="button-title">Add Event</h3>
+                </div>
+                <div class="button" onclick="openShorterPanel(this)">
+                    <h3 class="button-title">Delete Event</h3>
+                </div>
+                <div class="button" onclick="openAttendantPanel(this)">
+                    <h3 class="button-title">Add Attendant</h3>
+                </div>
+                <div class="button" onclick="openAttendantPanel(this)">
+                    <h3 class="button-title">Remove Attendant</h3>
+                </div>
+                <div class="button" onclick="openShorterPanel(this)">
+                    <h3 class="button-title">Toggle Source</h3>
+                </div>
+                <div class="button" onclick="openShorterPanel(this)">
+                    <h3 class="button-title">Update Database</h3>
+                </div>
+                <div class="button" onclick="postInstantChanges(this)">
+                    <h3 class="button-title">Clean Database</h3>
+                </div>
+                <div class="button" onclick="postInstantChanges(this)">
+                    <h3 class="button-title">Generate Client</h3>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="attendant-panel" id="attendantPanel" style="display:none">
+        <button class="button-primary close-button" style="background-color: #FF7F50" onclick="closePanel(attendantPanel)">Close</button>
+        <form action="">
+            <div class="row">
+                <label for="eventid">User ID</label>
+                <input class="u-full-width" type="userid" placeholder="123456789" id="uuidOne">
+                <label for="eventid">Event ID</label>
+                <input class="u-full-width" type="eventId" placeholder="123456789" id="attendantEventid">
+                <label for="tags">Tags</label>
+                <input class="u-full-width" type="tags" placeholder="concert" id="tags">
+            </div>
+            <div class="added-tags-container">
+                <div class="added-tag" id='tagTemplate' style="display:none" onclick="removeTag(this)">
+                    <p class="added-tag-text">Tag</p>
+                    <img class="added-tag-close" src="{{ url_for('static', filename = 'images/close.jpg') }}" alt="remove">
+                </div>
+            </div>
+            <div class="custom-column">
+                <input class="button-primary" type="button" onclick="addTag(tags)" value="Add Tag">
+                <input class="button-primary" type="button" value="Submit" onclick="postEventAndTags(attendantEventid, uuidOne)">
+            </div>
+        </form>
+    </div>
+
+    <div class="attendant-panel short" id="simplePanel" style="display:none">
+        <button class="button-primary close-button" style="background-color: #FF7F50" onclick="closePanel(simplePanel)">Close</button>
+        <form action="">
+            <div class="row">
+                <label for="eventid" class="panelTitle">Title</label>
+                <input class="u-full-width" type="eventId" placeholder="UUID" id="uuid">
+            </div>
+            <div class="custom-column">
+                <input class="button-primary" type="button" value="Submit" onclick="postEventActionOrSourceChange(uuid)">
+            </div>
+        </form>
+    </div>
+
+    <div class="attendant-panel" id="resultPanel" style="display:none">
+        <button class="button-primary close-button" style="background-color: #FF7F50" onclick="closePanel(resultPanel)">Close</button>
+        <p class="call-result">Result</p>
+    </div>
+
+    <img id="loader" style="display:none" src="{{ url_for('static', filename = 'images/loadingTwo.gif') }}" alt="loading">
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename = 'index.js') }}"></script>
 </body>
 </html>

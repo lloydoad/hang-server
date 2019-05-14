@@ -88,7 +88,7 @@ def createNewClientID():
     return getJsonResponse(INVALID_PASSWORD, INVALID_PASSWORD_MESSAGE)
   return getJsonResponse(SUCCESS_STATUS, result)
 
-@app.route('/toggleDatabase')
+@app.route('/toggleDatabase', methods=['GET', 'POST'])
 def toggleRoute():
   clientID = request.args.get(CLIENT_ID_KEY)
   datasourceId = request.args.get(SWITCH_KEY)
