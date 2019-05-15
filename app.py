@@ -4,7 +4,7 @@ import modules.auth as Auth
 import routers.mongo as Database
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 
 STATUS_KEY = 'status'
 RESULT_KEY = 'result'
@@ -20,6 +20,7 @@ SUCCESS_STATUS = 200
 INVALID_SEARCH_STATUS = 404
 INVALID_PASSWORD = 405
 INVALID_QUERY = 406
+
 INVALID_PASSWORD_MESSAGE = 'Invalid Password'
 INVALID_ClIENT_MESSAGE = 'Invalid Client'
 INVALID_SEARCH_MESSAGE = 'Search Error: Not Found'
