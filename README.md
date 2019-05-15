@@ -1,11 +1,11 @@
 # HANG SERVER
 A control center, database manager, and API manager for hang react app. [Control Center](https://hang-server.herokuapp.com/)
 
-### Available Routes
-#### Base URL
+## Available Routes
+### Base URL
 ```https://hang-server.herokuapp.com```
 
-#### Fetch Available Events
+### Fetch Events
 **Note**: *Pagination not currently enabled. Date fetch request data can be potentially large.*
 
 | Result                                                | Route               | Format                                   |
@@ -15,7 +15,7 @@ A control center, database manager, and API manager for hang react app. [Control
 | Events for specific week (starts at given day)        | ```/events/weekof```|```/<int:year>/<int:month>/<int:day>```   |
 | Events within geographic radius                       | ```/events/range``` |```/<double:latitude>,<double:longitude>,<double:radius>```    |
 
-#### Manage Database
+### Manage Database
 **Note**: *Requests without valid ClientIDs will be rejected. ClientIDs can be generated from control center*
 
 **Example**: `https://hang-server.herokuapp.com/toggleDatabase?clientid=<CLIENTID>&switch=seatGeekData`
