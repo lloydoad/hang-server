@@ -78,8 +78,8 @@ def getEventByMapRadius(latitude, longitude, radius):
   except TypeError as err:
     return getJsonResponse(INVALID_SEARCH_STATUS, 'Search Error: Wrong Format')
 
-# POST REQUESTS
-@app.route('/newclient')
+# GET, POST REQUESTS
+@app.route('/newclient', methods=['GET', 'POST'])
 def createNewClientID():
   password = request.args.get(USER_PASSWORD)
   result  = Auth.addNewClient(password)
@@ -105,7 +105,7 @@ def toggleRoute():
   result = str(Database.DATABASE_SWITCHES[datasourceId])
   return getJsonResponse(SUCCESS_STATUS, result)
 
-@app.route('/update')
+@app.route('/update', methods=['GET', 'POST'])
 def updateDatabase():
   clientID = request.args.get(CLIENT_ID_KEY)
   city = request.args.get(CITY_KEY)
@@ -118,7 +118,7 @@ def updateDatabase():
   Database.fillDatabase(str(city))
   return getJsonResponse(SUCCESS_STATUS, 'Updated')
 
-@app.route('/delete')
+@app.route('/delete', methods=['GET', 'POST'])
 def deleteOne():
   clientID = request.args.get(CLIENT_ID_KEY)
   eventId = request.args.get(EVENT_ID_KEY)
@@ -131,7 +131,7 @@ def deleteOne():
   results = Database.safe_delete(str(eventId))
   return getJsonResponse(results[STATUS_KEY], results[RESULT_KEY])
 
-@app.route('/clean')
+@app.route('/clean', methods=['GET', 'POST'])
 def cleanDatabase():
   clientID = request.args.get(CLIENT_ID_KEY)
 
@@ -142,7 +142,7 @@ def cleanDatabase():
   return getJsonResponse(SUCCESS_STATUS, ("%d Deleted" % result))
 
 # Passing arrays = tags[]=car&tags[]=radio
-@app.route('/addAttendant')
+@app.route('/addAttendant', methods=['GET', 'POST'])
 def addAttendant():
   clientID = request.args.get(CLIENT_ID_KEY)
   eventId = request.args.get(EVENT_ID_KEY)
@@ -155,7 +155,7 @@ def addAttendant():
   results = Database.safe_addAttendant(str(eventId), getAttendantObject(userID, tags))
   return getJsonResponse(results[STATUS_KEY], results[RESULT_KEY])
 
-@app.route('/removeAttendant')
+@app.route('/removeAttendant', methods=['GET', 'POST'])
 def removeAttendant():
   clientID = request.args.get(CLIENT_ID_KEY)
   eventId = request.args.get(EVENT_ID_KEY)
