@@ -4,7 +4,7 @@ import modules.auth as Auth
 import routers.mongo as Database
 
 app = Flask(__name__)
-app.config['DEBUG'] = False
+app.config['DEBUG'] = True
 
 STATUS_KEY = 'status'
 RESULT_KEY = 'result'
